@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from itertools import count
 from modules.Player import ImpulsivePlayer, DemandingPlayer, CautiousPlayer, RandomPlayer
 from modules.RealState import RealState
 from modules.Board import Board
@@ -51,16 +52,10 @@ board1.AddRealStateToBoard(realState3)
 
 print(board1.GetBoardRealStateList())
 
-playerList = [player1, player2, player3, player4]
-
-# InitRandomPlayerOrder
-random.shuffle(playerList)
-
 # InitBoard and Real State
 board = Board()
 for i in range(20):
-    buildName = "Edificio " + str(i+1)   
-    
+    buildName = "Edificio " + str(i+1)
 
     realState = RealState()
     realState.SetName("Edificio " + str(i+1))
@@ -69,7 +64,27 @@ for i in range(20):
     realState.SetOwner(NULL)
     realState.IsAvaliableToBuy(True)
 
-
     board.AddRealStateToBoard(realState)
-   
+
 print(board.GetBoardRealStateList())
+
+
+# -------> StartGame
+playerList = [player1, player2, player3, player4]
+
+# InitRandomPlayerOrder
+random.shuffle(playerList)
+
+# Main execution
+#while len(playerList)!=1:
+#    dd=2
+
+# ThrowDice()
+diceFace = np.random.randint(low=1, high=6)
+
+print(diceFace)
+
+
+for i in board.GetBoardRealStateList():
+    boardRealState = i.GetCostOfSale()
+    print(boardRealState)

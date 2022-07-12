@@ -6,7 +6,6 @@ from abc import ABC, abstractmethod
 # the abc (abstract base class) module provides you with the infrastructure for defining abstract base classes
 
 
-
 class Player(object):
     # __init__ is a special method called whenever you try to make
     # an instance of a class. As you heard, it initializes the object.
@@ -41,6 +40,12 @@ class Player(object):
     # @property
     def WithdrawMoney(self, amount: float):
         self.accountBalance -= amount
+
+    def DeclareBankrupt(self):
+        for i in self.realStateList:
+            i.SetOwner(NULL)
+
+        self.realStateList = []
 
 
 class CautiousPlayer(Player):
