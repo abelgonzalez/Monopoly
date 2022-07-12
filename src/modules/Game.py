@@ -4,40 +4,28 @@ from unicodedata import decimal, name
 from abc import ABC, abstractmethod
 # the abc (abstract base class) module provides you with the infrastructure for defining abstract base classes
 
-import RealState as RealState
+from modules.RealState import RealState
 
-
-class Player(object):
+class Game(object):
     # __init__ is a special method called whenever you try to make
     # an instance of a class. As you heard, it initializes the object.
     # Here, we'll initialize some of the data.
     def __init__(self):
         # Let's add some data to the [instance of the] class.
         self.name = ""
-        self.accountBalance = float(300)
-        self.realStateList = []
 
-    # We can also add our own functions.
-    #@property
-    def BuyRealState(self):
-        a = 1
-
-    #@property
-    def GetName(self):
+    def StartGame(self):
         return self.name
 
-    #@property
-    def SetName(self, name: str):
+    def InitRandomPlayerOrder(self, name: str):
         self.name = name
 
-    #@property
-    def CheckBalance(self):
-        return self.accountBalance
+    def InitBoard(self):
+        return self.realStateList
 
-    #@property
-    def AddBalance(self, amount: float):
-        self.accountBalance += amount
+    def ThrowDice(self, realStateList: list):
+        self.realStateList = realStateList
+    
+    def GetPlayersOnBoard(self, realState: RealState):
+        self.realStateList.append(realState) 
 
-    #@property
-    def WithdrawMoney(self, amount: float):
-        self.accountBalance -= amount

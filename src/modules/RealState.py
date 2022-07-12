@@ -1,6 +1,6 @@
 
 from asyncio.windows_events import NULL
-import Player as Player
+from modules.Player import Player 
 
 class RealState(object):
    
@@ -45,10 +45,3 @@ class RealState(object):
         self.avaliableToBuy = avaliableToBuy
 
 
-
-realState = RealState()
-realState.SetName("Edificio 1")
-realState.SetRentalAmount(100)
-
-
-print(realState.GetName())
