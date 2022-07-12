@@ -3,6 +3,10 @@ import random
 from unicodedata import decimal, name
 # Python doesn't directly support abstract classes.
 from abc import ABC, abstractmethod
+
+#from modules.RealState import RealState
+
+#from modules.RealState import RealState
 # the abc (abstract base class) module provides you with the infrastructure for defining abstract base classes
 
 
@@ -47,30 +51,37 @@ class Player(object):
 
         self.realStateList = []
 
+    def AddRealStateOwnership(self, realState):
+        self.realStateList.append(realState)
+
 
 class CautiousPlayer(Player):
 
-    def BuyRealState(self, realStateCost):
-        if (self.CheckBalance() - realStateCost > 80):
-            self.WithdrawMoney(realStateCost)
+    def BuyRealState(self, realState):
+        if (self.CheckBalance() - realState.GetCostOfSale() > 80):
+            self.WithdrawMoney(realState.GetCostOfSale())
+            self.AddRealStateOwnership(realState)
+        #if (self.CheckBalance() - realStateCost > 80):
+        #    self.WithdrawMoney(realStateCost)
+            #self.AddRealStateOwnership(realState)
 
 
 class DemandingPlayer(Player):
 
-    def BuyRealState(self, rentalAmount):
-        if (rentalAmount > 50):
-            self.WithdrawMoney(rentalAmount)
+    def BuyRealState(self, realState):
+        if (realState.GetRentalAmount() > 50):
+            self.WithdrawMoney(realState.GetRentalAmount())
 
 
 class RandomPlayer(Player):
 
-    def BuyRealState(self, realStateCost):
+    def BuyRealState(self, realState):
         if (random.choice([True, False]) == True):
-            self.WithdrawMoney(realStateCost)
+            self.WithdrawMoney(realState.GetCostOfSale())
 
 
 class ImpulsivePlayer(Player):
 
-    def BuyRealState(self, realStateCost):
-        if (realStateCost <= self.CheckBalance()):
-            self.WithdrawMoney(realStateCost)
+    def BuyRealState(self, realState):
+        if (realState.GetCostOfSale() <= self.CheckBalance()):
+            self.WithdrawMoney(realState.GetCostOfSale())

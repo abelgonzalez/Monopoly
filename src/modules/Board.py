@@ -2,9 +2,11 @@ from asyncio.windows_events import NULL
 from unicodedata import decimal, name
 # Python doesn't directly support abstract classes.
 from abc import ABC, abstractmethod
+from collections import deque
 # the abc (abstract base class) module provides you with the infrastructure for defining abstract base classes
 
 from modules.RealState import RealState
+
 
 class Board(object):
     # __init__ is a special method called whenever you try to make
@@ -13,7 +15,9 @@ class Board(object):
     def __init__(self):
         # Let's add some data to the [instance of the] class.
         self.name = ""
-        self.realStateList = []*20
+        #self.realStateList = []*20
+        # linked list
+        self.realStateList = deque()
 
     def GetBoardName(self):
         return self.name
@@ -26,7 +30,6 @@ class Board(object):
 
     def SetBoardRealStateList(self, realStateList: list):
         self.realStateList = realStateList
-    
-    def AddRealStateToBoard(self, realState: RealState):
-        self.realStateList.append(realState) 
 
+    def AddRealStateToBoard(self, realState: RealState):
+        self.realStateList.append(realState)
