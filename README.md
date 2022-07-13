@@ -14,6 +14,18 @@
 ## 🧾 About
 **MonopolySimulation** is a Python project to simulate 300 times a simplified Monopoly board game. The simulation occurs with four players based on special behavior rules considering their atitude in business. 
 
+
+---
+## 📷 Screenshots
+
+**Class diagram**
+<h1 align="center">
+  <img 
+    src="./doc/ClassDiagram.png" class="center" width="500" height="400"
+  />
+</h1>
+
+
 ---
 ## 🕖 Versioning
 - MonopolySimulation v1.0 (relased in 13/07/2022)
@@ -40,7 +52,6 @@
   # Enter directory
   $ cd MonopolySimulation
 ```
-
  
 ---
 ## 😎 How to Run
@@ -54,6 +65,7 @@
 
 ---
 ## 👉 Additional information
+* Game execution rules in **doc** folder.
 * In case of sensitive bugs like security vulnerabilities, don't hesitate to contact me at abelgodev@gmail.com instead of using the issue tracker. I value your effort to improve the security and privacy of this project!
 
 ---
