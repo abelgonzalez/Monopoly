@@ -9,7 +9,7 @@ class RealState(object):
         self.name = ""
         self.costOfSale = float(200)
         self.rentalAmount = float(100)
-        self.owner = None
+        self.owner = ""
         self.avaliableToBuy = True
 
     # Getter and setters
@@ -35,11 +35,11 @@ class RealState(object):
     def GetOwner(self):
         return self.owner
 
-    def SetOwner(self, owner):
+    def SetOwner(self, owner:Player):
         self.owner = owner
 
     def GetOwner(self):
-        return self.avaliableToBuy
+        return self.owner
 
     def IsAvaliableToBuy(self):
         return self.avaliableToBuy 

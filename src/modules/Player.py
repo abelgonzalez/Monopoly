@@ -61,9 +61,7 @@ class CautiousPlayer(Player):
         if (self.CheckBalance() - realState.GetCostOfSale() > 80):
             self.WithdrawMoney(realState.GetCostOfSale())
             self.AddRealStateOwnership(realState)
-        #if (self.CheckBalance() - realStateCost > 80):
-        #    self.WithdrawMoney(realStateCost)
-            #self.AddRealStateOwnership(realState)
+       
 
 
 class DemandingPlayer(Player):
