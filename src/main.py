@@ -1,15 +1,12 @@
-from itertools import count
-from modules.Player import ImpulsivePlayer, DemandingPlayer, CautiousPlayer, RandomPlayer
-from modules.RealState import RealState
-from modules.Board import Board
-from modules.Game import Game
-from modules.Utils import GetPlayerByName
-import random
+
 import numpy as np
-import itertools
-import time
 import statistics
-import collections
+
+from modules.Game import Game
+from modules.Board import Board
+from modules.RealState import RealState
+from modules.Player import ImpulsivePlayer, DemandingPlayer, CautiousPlayer, RandomPlayer
+
 
 if __name__ == "__main__":
 
@@ -36,34 +33,44 @@ if __name__ == "__main__":
         board.AddRealStateToBoard(realState)
 
     # Timeout
-    timeoutValue = 10
+    timeoutValue = 1000
 
     # Simulations
-    quantOfSimulations = 50
+    quantOfSimulations = 300
 
     # Report vars:
-    gamesEndedByTimeOut = 0
-    timePerGame = []
-    totalTime = 0
-    finalPlayerListBeahavior = {}
-    finalPlayerProbabilities = {}
-    for player in playerList:
-        finalPlayerProbabilities[player.GetName()] = 0
+    gamesEndedByTimeOutDict = {}
+    timePerGameDict = {}
+    playerProbabilitiesDict = {"Jogador1 - Impulsivo": 0, "Jogador2 - Exigente": 0,
+                               "Jogador3 - Cauteloso": 0, "Jogador4 - Aleatório": 0}
+    playerWinningDict = {}
 
     # Main execution
     for simIndex in range(quantOfSimulations):
 
-        print("######## Simulation " + str(simIndex) +
+        simStr = str(simIndex+1)
+
+        print("######## Simulation " + simStr +
               " of " + str(quantOfSimulations) + " ########")
         game = Game()
-        game.SetName("Simulation"+str(simIndex))
-        gamesEndedByTimeOut, timePerGame, finalPlayerProbabilitiesStr, winningPlayer = game.StartGame(
+        game.SetGameName("Simulation"+simStr)
+        gameEndedByTimeOut, timeGame, playerProbability, winningPlayer = game.StartGame(
             playerList, board, timeoutValue)
 
-    # print("\n")
-    #print("Final report")
-    #print("1. Time-out ended games: " + str(gamesEndedByTimeOut))
-    #print("2. Median time per game: " + str(statistics.median(timePerGame)))
-    #print("3. Percent of victories by player: " + str(finalPlayerProbabilities))
-    # print("4. Winner behaviour: " +
-    #      str(list(finalPlayerListBeahavior.keys())[0]))
+        gamesEndedByTimeOutDict["Simulation " + simStr] = gameEndedByTimeOut
+        timePerGameDict["Simulation " + simStr] = timeGame
+
+        for key, value in playerProbability.items():
+            playerProbabilitiesDict[key] += value
+
+        playerWinningDict["Simulation "+simStr] = winningPlayer
+
+    print("\n")
+    print("Final report")
+    print("1. Time-out ended games: " +
+          str(sum(gamesEndedByTimeOutDict.values())))
+    print("2. Median time per game: " +
+          str(statistics.median(timePerGameDict.values())))
+    print("3. Percent of victories by player: " + str(playerProbabilitiesDict))
+    print("4. Winner behaviour: " +
+          str(list(playerWinningDict.values())[0]))

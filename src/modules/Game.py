@@ -1,49 +1,22 @@
-from asyncio.windows_events import NULL
-from unicodedata import decimal, name
-# Python doesn't directly support abstract classes.
-from abc import ABC, abstractmethod
-# the abc (abstract base class) module provides you with the infrastructure for defining abstract base classes
-
-from modules.RealState import RealState
-from asyncio.windows_events import NULL
-from itertools import count
-from modules.Player import ImpulsivePlayer, DemandingPlayer, CautiousPlayer, RandomPlayer
-from modules.RealState import RealState
-from modules.Board import Board
-from modules.Utils import GetPlayerByName
+import time
 import random
 import numpy as np
-import itertools
-import time
-import statistics
-import collections
+
+from modules.Board import Board
+from modules.RealState import RealState
+from modules.Utils import GetPlayerByName
 
 
 class Game(object):
-    # __init__ is a special method called whenever you try to make
-    # an instance of a class. As you heard, it initializes the object.
-    # Here, we'll initialize some of the data.
+
     def __init__(self):
-        # Let's add some data to the [instance of the] class.
         self.name = ""
 
-    def InitRandomPlayerOrder(self, name: str):
-        self.name = name
-
-    def GetName(self):
+    def GetGameName(self):
         return self.name
 
-    def SetName(self, name: str):
+    def SetGameName(self, name: str):
         self.name = name
-
-    def InitBoard(self):
-        return self.realStateList
-
-    def ThrowDice(self, realStateList: list):
-        self.realStateList = realStateList
-
-    def GetPlayersOnBoard(self, realState: RealState):
-        self.realStateList.append(realState)
 
     def StartGame(self, playerList: list, board: Board, timeoutValue: int):
 
@@ -88,7 +61,7 @@ class Game(object):
                 currentPositionOnBoard[indexBoardPlayer] += diceFace
 
                 # In case we arrive to boundaries of game. Ex position 20 of board, then starts
-                # at the beggining. Recomendation: use linked list.
+                # at the beggining. Another idea: use linked list.
                 if currentPositionOnBoard[indexBoardPlayer] >= 20:
                     currentPositionOnBoard[indexBoardPlayer] -= 20
                     # Update board loop
@@ -105,11 +78,11 @@ class Game(object):
 
                 # Checking if that real state is avaliable to buy, do it, and mark him has not avaliable
                 playerBalance = player.CheckBalance()
-                print("balance = "+str(playerBalance))
+                print("Player balance = "+str(playerBalance))
                 realStateCost = currentPositionRealState.GetCostOfSale()
-                print("realStateCost = "+str(realStateCost))
+                print("RealStateCost = "+str(realStateCost))
                 realStateRent = currentPositionRealState.GetRentalAmount()
-                print("realStateRent = "+str(realStateRent))
+                print("RealStateRent = "+str(realStateRent))
                 ownerName = str(currentPositionRealState.GetOwner())
                 print("Owner of this real state " + ownerName)
 
@@ -192,7 +165,7 @@ class Game(object):
         # Q2
         endTimeExecution = time.time()
         totalTime = endTimeExecution - startTimeExecution
-        timePerGame.append(totalTime)
+        # timePerGame.append(totalTime)
 
         for player in playerList:
             finalPlayerListBeahavior[player.GetName()] = player.CheckBalance()
@@ -209,7 +182,7 @@ class Game(object):
         finalPlayerProbabilities[winningPlayer] += 1
         finalPlayerProbabilitiesStr = (str(finalPlayerProbabilities))
         gamesEndedByTimeOutStr = str(gamesEndedByTimeOut)
-        timePerGameStr=str(timePerGame)
+        timePerGameStr = str(totalTime)
 
         # print("Total execution time (sec): " + str(totalTime))
         # print("4. Winner behaviour: " + str(finalPlayerListBeahavior))
@@ -223,5 +196,10 @@ class Game(object):
         print("3. Percent of victories by player: " +
               finalPlayerProbabilitiesStr)
         print("4. Winner player behaviour: " + winningPlayer)
+        print("5. Wealth per player: " + str(finalPlayerListBeahavior))
+        print("6. Wealthy player : " +
+              str(next(iter((finalPlayerListBeahavior.items())))))
 
-        return gamesEndedByTimeOutStr, timePerGameStr, finalPlayerProbabilitiesStr, winningPlayer
+        print("\n")
+
+        return gamesEndedByTimeOut, totalTime, finalPlayerProbabilities, winningPlayer
