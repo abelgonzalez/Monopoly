@@ -48,3 +48,22 @@ class RealState(object):
         self.avaliableToBuy = avaliableToBuy
 
 
+if __name__ == "__main__":
+        
+    # Real state init
+    realState1 = RealState()
+    realState1.SetName("Edificio 1")
+    realState1.SetRentalAmount(100)
+    realState1.SetOwner("")
+
+    realState2 = RealState()
+    realState2.SetName("Edificio 2")
+    realState2.SetRentalAmount(150)
+    realState1.SetOwner("")
+
+    realState3 = RealState()
+    realState3.SetName("Edificio 3")
+    realState3.SetRentalAmount(40)
+    realState1.SetOwner("")
+
+

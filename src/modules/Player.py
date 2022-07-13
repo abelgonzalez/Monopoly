@@ -54,11 +54,14 @@ class Player(object):
     def AddRealStateOwnership(self, realState):
         self.realStateList.append(realState)
 
+    
+
+
 
 class CautiousPlayer(Player):
 
     def BuyRealState(self, realState):
-        if (self.CheckBalance() - realState.GetCostOfSale() > 80):
+        if ((self.CheckBalance() - realState.GetCostOfSale()) > 80):
             self.WithdrawMoney(realState.GetCostOfSale())
             self.AddRealStateOwnership(realState)
        

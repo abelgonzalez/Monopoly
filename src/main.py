@@ -4,6 +4,7 @@ from modules.Player import ImpulsivePlayer, DemandingPlayer, CautiousPlayer, Ran
 from modules.RealState import RealState
 from modules.Board import Board
 from modules.Game import Game
+from modules.Utils import GetPlayerByName
 import random
 import numpy as np
 import itertools
@@ -11,52 +12,18 @@ import itertools
 # Player init
 player1 = ImpulsivePlayer()
 player1.SetName("Jogador1 - Impulsivo")
-realStateCost = 200
-# player1.BuyRealState(realStateCost)
-
 
 player2 = DemandingPlayer()
 player2.SetName("Jogador2 - Exigente")
-rentalAmount = 60
-# player2.BuyRealState(rentalAmount)
-
 
 player3 = CautiousPlayer()
 player3.SetName("Jogador3 - Cauteloso")
-realStateCost = 60
-# player3.BuyRealState(realStateCost)
-
 
 player4 = RandomPlayer()
 player4.SetName("Jogador3 - Aleatório")
-realStateCost = 90
-# player4.BuyRealState(realStateCost)
 
 
-# Real state init
-realState1 = RealState()
-realState1.SetName("Edificio 1")
-realState1.SetRentalAmount(100)
-realState1.SetOwner("")
-
-realState2 = RealState()
-realState2.SetName("Edificio 2")
-realState2.SetRentalAmount(100)
-realState1.SetOwner("")
-
-realState3 = RealState()
-realState3.SetName("Edificio 3")
-realState3.SetRentalAmount(100)
-realState1.SetOwner("")
-
-board1 = Board()
-board1.AddRealStateToBoard(realState1)
-board1.AddRealStateToBoard(realState2)
-board1.AddRealStateToBoard(realState3)
-
-print(board1.GetBoardRealStateList())
-
-# InitBoard and Real State
+# Init Board and Real State
 board = Board()
 for i in range(20):
     buildName = "Edificio " + str(i+1)
@@ -70,7 +37,7 @@ for i in range(20):
 
     board.AddRealStateToBoard(realState)
 
-print(board.GetBoardRealStateList())
+# print(board.GetBoardRealStateList())
 
 
 # -------> StartGame
@@ -83,74 +50,118 @@ random.shuffle(playerList)
 # Init Players position on board
 currentPositionOnBoard = [0]*4
 
-# print(currentPositionOnBoard)
+# Initially, all players starts at 0
+indexBoardPlayer = 0
+
+# Init game loop
+quantOfIterationsbyPlayer = 1
+
+# Init board loop
+quantOfBoardIterations = 1
+
+# Timeout
+timeoutValue = 1000
 
 # Main execution
-# while len(playerList)!=1:
-#    dd=2
+while (True):
+    print("Board iteration #"+str(quantOfBoardIterations))
+    print("Iteration #"+str(quantOfIterationsbyPlayer))
 
-index = 0
+    for player in playerList:
 
-for player in playerList:
+        # ThrowDice()
+        diceFace = np.random.randint(low=1, high=6)
+        print("Current player --> " + player.GetName())
+        print("Movements (Dice) --> " + str(diceFace))
 
-    # ThrowDice()
-    diceFace = np.random.randint(low=1, high=6)
-    print(diceFace)
+        # Update current Player position
+        currentPositionOnBoard[indexBoardPlayer] += diceFace
 
-    # Update current Player position
-    currentPositionOnBoard[index] += diceFace
+        # In case we arrive to boundaries of game. Ex position 20 of board, then starts
+        # at the beggining. Recomendation, use linked list.
+        if currentPositionOnBoard[indexBoardPlayer] >= 20:
+            currentPositionOnBoard[indexBoardPlayer] -= 20
+            # Update board loop
+            quantOfBoardIterations += 1
 
-    # Getting the board
-    boardRealStateList = board.GetBoardRealStateList()
+        print("Current board position " +
+              str(currentPositionOnBoard[indexBoardPlayer]))
 
-    # Getting the real state, foreach player considering their departure point
-    currentPositionRealState = boardRealStateList[currentPositionOnBoard[index]]
+        # Getting the board
+        boardRealStateList = board.GetBoardRealStateList()
 
-    print("Current Player ---> " + str(player.GetName()))
-    # Checking if that real state is avaliable to buy, do it, and mark him has not avaliable
-    playerBalance = player.CheckBalance()
-    print("balance = "+str(playerBalance))
-    realStateCost = currentPositionRealState.GetCostOfSale()
-    print("realStateCost = "+str(realStateCost))
-    print("Owner "+str(currentPositionRealState.GetOwner()))
-    if (realStateCost <= playerBalance):
+        # Getting the real state, foreach player considering their departure point
+        currentPositionRealState = boardRealStateList[currentPositionOnBoard[indexBoardPlayer]]
 
-        player.BuyRealState(currentPositionRealState)
-        currentPositionRealState.SetOwner(player)
-        print(player.GetName() + " is now the owner of " +
-              currentPositionRealState.GetName())
-        print("Owner after buy "+str(currentPositionRealState.GetOwner()))
+        # Checking if that real state is avaliable to buy, do it, and mark him has not avaliable
+        playerBalance = player.CheckBalance()
+        print("balance = "+str(playerBalance))
+        realStateCost = currentPositionRealState.GetCostOfSale()
+        print("realStateCost = "+str(realStateCost))
+        realStateRent = currentPositionRealState.GetRentalAmount()
+        print("realStateRent = "+str(realStateRent))
+        ownerName = str(currentPositionRealState.GetOwner())
+        print("Owner of this real state " + ownerName)
 
-    elif (currentPositionRealState.GetOwner() != ""):
-        print("Player who pays " + player.GetName())
-        rental = currentPositionRealState.GetRentalAmount()
-        player.WithdrawMoney(rental)
-        print("Rental " + str(rental))
+        # Has the funds and the real state does not have owner
+        if (realStateCost <= playerBalance and currentPositionRealState.GetOwner() == ""):
 
-        landLord = currentPositionRealState.GetOwner()
-        # landLord.AddBalance(rental)
-        print("Receiver " + str(landLord))
+            player.BuyRealState(currentPositionRealState)
+            currentPositionRealState.SetOwner(player)
+            print(player.GetName() + " is now the owner of " + ownerName)
+            print("Owner after buy "+str(currentPositionRealState.GetOwner()))
 
-    print(currentPositionRealState.GetCostOfSale())
+        # In case of the real state has owner, then pay rent to landlord
+        elif (currentPositionRealState.GetOwner() != ""):
+            print("Pay rent!")
+            print("Player who pays " + player.GetName())
+            player.WithdrawMoney(realStateRent)
+            print("Rental " + str(realStateRent))
 
-    # In case no funds or negative, declare it in Bankrupt
-    if player.CheckBalance() <= 0:
-        player.DeclareBankrupt()
-        playerList.remove(player)
+            # Getting landlord/owner player
+            ownerPlayer = currentPositionRealState.GetOwner()
+            # ownerPlayer.AddBalance(realStateRent)
 
-        pass
+            # Now, update the owner player to player's list
+            playerOwner = GetPlayerByName(ownerPlayer, playerList)
+            playerOwner.AddBalance(realStateRent)
+            indexOwner = playerList.index(playerOwner)
+            playerList[indexOwner] = playerOwner
 
-    # Setting the real state, foreach player considering their departure point
-    boardRealStateList[currentPositionOnBoard[index]
-                       ] = currentPositionRealState
+            print("Receiver " + str(playerOwner))
 
-    # At the end of each execution, each player gains $100
-    player.AddBalance(float(100))
+       
+        # In case no funds or negative, declare it in Bankrupt
+        if player.CheckBalance() <= 0:
+            player.DeclareBankrupt()
+            playerList.remove(player)
 
-    index += 1
+            # Also, removes all real states from him
+            for realState in board:
+                if realState.GetOwner() == player:
+                    realState.SetOwner("")
+            
+            
+            print("****Player " + str(player.GetName()) + " had declared is in bankrupt***")
+
+            #pass
+
+        # Setting the real state, foreach player considering their departure point
+        boardRealStateList[currentPositionOnBoard[indexBoardPlayer]
+                           ] = currentPositionRealState
+
+        # At the end of each execution, each player gains $100
+        player.AddBalance(float(100))
+
+        print("\n")
+
+    quantOfIterationsbyPlayer += 1
+
+    if (len(playerList) == 1) or (timeoutValue <= quantOfBoardIterations):
+        break
 
 
-print(currentPositionOnBoard)
+print("End of execution!")
 
 
 # for i in board.GetBoardRealStateList():
